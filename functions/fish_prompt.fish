@@ -26,7 +26,7 @@ function fish_prompt
             set git_status " $(set_color green)✔"
         end
         if git stash list 2>/dev/null | string length -q
-            set git_stash " $(set_color cyan)"
+            set git_stash " $(set_color cyan)≡"
         else
             set git_stash ""
         end
@@ -54,12 +54,12 @@ function fish_prompt
                 set git_sync " $(set_color bryellow)↓$behind"
             end
         end
-        set git_info "$(set_color magenta)  $branch$git_status$git_stash$git_sync $(set_color normal)"
+        set git_info "$(set_color magenta) ⎇ $branch$git_status$git_stash$git_sync $(set_color normal)"
     end
 
     set -l node_info ""
     if command -q node && test -f package.json
-        set node_info "$(set_color brblue) $(node --version)$(set_color normal) "
+        set node_info "$(set_color brblue)⬢$(node --version)$(set_color normal) "
     end
 
     set -l venv_info ""
