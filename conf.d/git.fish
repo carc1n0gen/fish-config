@@ -1,3 +1,6 @@
+#
+# A bunch of git related abbreviations.
+#
 if command -q git
     # Basic
     abbr -a g git

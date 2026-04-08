@@ -1,3 +1,6 @@
+#
+# Setup COWPATH to include system and user cow files.
+#
 if command -q cowsay
     mkdir -p ~/.local/share/cowsay/cows
 

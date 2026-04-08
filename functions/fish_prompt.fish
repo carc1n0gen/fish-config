@@ -1,3 +1,8 @@
+#
+# Custom Fish prompt with Git status, Node version, Python virtualenv, and time display.
+#
+# TODO: custom timestamp format support
+#
 function fish_prompt
     set -l last_status $status
 

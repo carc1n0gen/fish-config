@@ -1,3 +1,6 @@
+#
+# Automatically extract common archive formats into a directory named after the archive.
+#
 function extract
     argparse 'h/help' -- $argv
     or return 1

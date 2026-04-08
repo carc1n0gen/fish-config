@@ -1,3 +1,6 @@
+#
+# Spin up a quick HTTP server in the current directory.
+#
 function serve
     argparse 'h/help' 'p/port=' -- $argv
     or return 1
