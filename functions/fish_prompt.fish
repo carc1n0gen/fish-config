@@ -1,5 +1,5 @@
 #
-# Custom Fish prompt with Git status, Node version, Python virtualenv, and time display.
+# Custom Fish prompt with Git info, Node version, Python virtualenv, and time display.
 #
 function fish_prompt
     set -l last_status $status
@@ -15,21 +15,30 @@ function fish_prompt
     set -l git_info ""
     set -l branch (git branch --show-current 2>/dev/null)
     if test -n "$branch"
+        set -l branch_symbol (if set -q NERD_FONT; echo ""; else echo "⎇"; end)
+        set -l staged_symbol (if set -q NERD_FONT; echo ""; else echo "+"; end)
+        set -l unstaged_symbol (if set -q NERD_FONT; echo ""; else echo "⚑"; end)
+        set -l untracked_symbol (if set -q NERD_FONT; echo "󰀦"; else echo "⚠"; end)
+        set -l clean_symbol (if set -q NERD_FONT; echo "󰸞"; else echo "✔"; end)
+        set -l stash_symbol (if set -q NERD_FONT; echo ""; else echo "≡"; end)
+        set -l up_symbol (if set -q NERD_FONT; echo ""; else echo "↑"; end)
+        set -l down_symbol (if set -q NERD_FONT; echo ""; else echo "↓"; end)
+
         set git_status ""
         if not git diff --cached --quiet 2>/dev/null
-            set git_status "$git_status $(set_color green)+"
+            set git_status "$git_status $(set_color green)$staged_symbol"
         end
         if not git diff --quiet 2>/dev/null
-            set git_status "$git_status $(set_color yellow)✗"
+            set git_status "$git_status $(set_color yellow)$unstaged_symbol"
         end
         if test -n "$(git ls-files --others --exclude-standard 2>/dev/null | head -1)"
-            set git_status "$git_status $(set_color red)?"
+            set git_status "$git_status $(set_color red)$untracked_symbol"
         end
         if test -z "$git_status"
-            set git_status " $(set_color green)✔"
+            set git_status " $(set_color green)$clean_symbol"
         end
         if git stash list 2>/dev/null | string length -q
-            set git_stash " $(set_color cyan)≡"
+            set git_stash " $(set_color cyan)$stash_symbol"
         else
             set git_stash ""
         end
@@ -45,19 +54,20 @@ function fish_prompt
             end
         end
 
-        set -l ahead (git rev-list --count @{upstream}..HEAD 2>/dev/null)
-        set -l behind (git rev-list --count HEAD..@{upstream} 2>/dev/null)
+        set -l lr (git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null)
+        set -l ahead (echo $lr | awk '{print $1}')
+        set -l behind (echo $lr | awk '{print $2}')
         set git_sync ""
         if test -n "$ahead" && test -n "$behind"
             if test $ahead -gt 0 && test $behind -gt 0
-                set git_sync " $(set_color brred)↑$ahead↓$behind"
+                set git_sync " $(set_color brred)$up_symbol$ahead$down_symbol$behind"
             else if test $ahead -gt 0
-                set git_sync " $(set_color brgreen)↑$ahead"
+                set git_sync " $(set_color brgreen)$up_symbol$ahead"
             else if test $behind -gt 0
-                set git_sync " $(set_color bryellow)↓$behind"
+                set git_sync " $(set_color bryellow)$down_symbol$behind"
             end
         end
-        set git_info "$(set_color magenta) ⎇ $branch$git_status$git_stash$git_sync $(set_color normal)"
+        set git_info "$(set_color magenta) ($branch_symbol $branch$git_status$git_stash$git_sync$(set_color magenta))$(set_color normal)"
     end
 
     set -l node_info ""
