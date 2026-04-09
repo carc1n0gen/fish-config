@@ -1,8 +1,6 @@
 #
 # Custom Fish prompt with Git status, Node version, Python virtualenv, and time display.
 #
-# TODO: custom timestamp format support
-#
 function fish_prompt
     set -l last_status $status
 
@@ -73,7 +71,8 @@ function fish_prompt
         set venv_info "$(set_color brblue)($venv_name)$(set_color normal) "
     end
 
-    set -l time_str (date "+%I:%M%P %Y-%m-%d")
+    set -l date_fmt (set -q FISH_PROMPT_DATE_FORMAT; and echo $FISH_PROMPT_DATE_FORMAT; or echo "%Y-%m-%d %H:%M")
+    set -l time_str (date "+$date_fmt")
     set -l time_len (string length $time_str)
     set -l time_col (math $COLUMNS - $time_len + 1)
 
