@@ -1,3 +1,12 @@
+#
+# Take a screenshot using grim and slup. Saves image to ~/Pictures/Screenshots
+# with a timestamped filename, and copies it to the clipboard using wl-copy.
+# If the function is run in an interactive shell, it will print a message to
+# the terminal. If run in a non-interactive shell, it will send a desktop
+# notification.
+#
+# TODO: add command args for whether to save, and timestamp format.
+#
 function grimslurp
     set -l message ""
     set -l image_path ""
